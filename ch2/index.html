@@ -1,0 +1,71 @@
+<!doctype html>
+<script>
+// functions are objects in JS, and the defining feature they have vs other objects
+// is an internal [[Call]] property, which signifies they can actually be invoked
+// internal properties are not accessible via code
+
+
+// function declaration is the most common way of defining
+function foo(){};
+
+// function expression is the same as assigning variables
+var foo = function(){};
+
+// the difference is that declarations are hoisted to the top of the context, so you can invoke them before are defined in the code
+
+var result = add(5, 5);
+function add(num1, num2) {
+    return num1+num2;
+}
+
+// so the JS engine basically does this:
+function add(num1, num2) {
+    return num1+num2;
+}
+var result = add(5, 5);
+
+// function hoisting only happens for declarations because the function name is known ahead of time.
+// because JS has first class functions, you can use them just as you do any other objects
+function sayHi() {
+    console.log('hi');
+}
+
+sayHi();
+
+var sayHi2 = sayHi;
+
+sayHi2();
+
+// arguments is a special (array-like object) inside functions thats useful if you're passing an unknown amount of parameters for say, adding
+
+// Most object-oriented languages support function overloading, which is the
+// ability of a single function to have multiple signatures.
+/* 
+ * A function signature * is made up of the function name plus the number and type of parameters
+ * the function expects. Thus, a single function can have one signature that
+ * accepts a single string argument and another that accepts two numeric
+ * arguments. The language determines which version of a function to call
+ * based on the arguments that are passed in.
+*/
+
+// Javascript functions dont have signatures as they can pass any number of arguments
+
+function sayMessage(message) { 
+    console.log(message);
+}
+function sayMessage() { 
+    console.log("Default message");
+}
+
+sayMessage("Hello!"); // outputs "Default message"
+
+// if we were in a language that supported function overloading, this would output Hello!
+// but in JS the 'last' defined function wins and this outputs Default message
+// you can mimic function overloading by branching on the arguments.length inside the function
+
+function sayMessage( message ) {
+    if ( arguments.length === 0 ) { 
+    } else {
+    }
+}
+</script>
