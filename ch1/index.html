@@ -1,0 +1,83 @@
+<!doctype html>
+<script>
+
+// the result is object. this is an error by TC39, who maintain JS. You could reason that null is an empty pointer object
+// but that's confusing
+// to compare null, use === null
+console.log(typeof null);
+
+var a = null;
+console.log(a===null);
+
+// primitive values aren't objects but JS makes them look like objects to provide a consistent experience
+var b = 'String';
+b.toLowerCase();
+
+// JS is a garbage collected language, so dont worry about memory allocations
+// but it's best to dereference objects that you no longer need
+// this is done by setting the variable to null;
+// Dereferencing objects is especially important in very large applications that use millions of objects
+var obj = new Object;
+obj = null;
+
+// for identifying reference types, use instanceof
+console.log( typeof [] ) // returns object
+console.log( [] instanceof Array );
+console.log( [] instanceof Object ); // also detects inheritance
+
+
+// each web page contains its own instance of Array, Object
+// so instanceof actually wont work properly for Arrays because the array will only be an instance of the Array in the other webpage
+// therefore in ES5, Array.isArray was created
+// not supported in IE8 or lower
+var items = [];
+console.log( Array.isArray( items ) );
+
+// whenever methods on a primitive wrapper type are called, 
+
+var name = "Nicholas";
+var firstChar = name.charAt(0);
+console.log(firstChar);
+
+// this is what happens internally ( called autoboxing )
+var name = "Nicholas";
+var temp = new String(name);
+var firstChar = temp.charAt(0);
+temp = null;
+console.log(firstChar);
+
+// To test this out, try adding a property to a string as if it were a regular object
+var name = "Nicholas";
+name.last = "Zakas";
+
+console.log(name.last);
+var name = "Nicholas";
+var temp = new String(name);
+temp.last = "Zakas";
+temp = null;
+
+// temporary object destroyed
+// Instead of assigning a new property to a string, the code actually creates a new property on a temporary object that is then destroyed
+var temp = new String(name);
+console.log(temp.last);
+temp = null;
+
+//The instanceof operator returns false because a temporary object is created only when a value is read
+// instanceof doesnt read anythingso no temporary objects are created
+var name = "Nicholas";
+console.log(name instanceof String);
+
+// you can call the constructor but typeof will return object
+var name = new String('Nicholas');
+
+// In addition, you can’t use String , Number , and Boolean objects as you
+// would primitive values. For example, the following code uses a Boolean
+// object. The Boolean object is false , yet console.log("Found") still executes
+// because an object is always considered true inside a conditional statement.
+// It doesn’t matter that the object represents false ; it’s an object, so it evaluates to true
+
+var found = new Boolean(false);
+if ( found ) { 
+    console.log('Found!');
+}
+</script>
