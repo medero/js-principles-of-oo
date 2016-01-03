@@ -68,4 +68,59 @@ function sayMessage( message ) {
     } else {
     }
 }
+
+// this is bad because "person." makes this tightly coupled
+// use "this" for this to be loosely coupled and more dynamic
+// if you changed the variable name you would have to change all the instances
+var person = {
+    name: 'Nicholas',
+    sayName: function() {
+        console.log( person.name );
+    }
+};
+
+var person = {
+    name: 'Nicholas',
+    sayName: function() {
+        console.log( this.name );
+    }
+};
+
+function sayName(message) {
+    console.log('Hi, ' + this.name + '. ' + message);
+}
+
+// you can change the context of this using call, apply and bind
+var person1 = {
+    name: 'Nicholas'
+};
+
+var person2 = {
+    name: 'Pete'
+};
+
+sayName.call( person1, "How you doin?" );
+sayName.call( person2, "How are you!" );
+
+// the apply method works the same way, but it only accepts two arguments
+// first is the context and second is an array to pass as arguments
+
+sayName.apply( person1, ['How are you?']);
+
+// the bind method was added to ES5 and behaves differently than the other two
+// the first argument is the new context
+
+// you can either bind the parameters in the bind call
+var sayNameForPerson2 = sayName.bind( person2, 'LOL' );
+sayNameForPerson2();
+
+// or specify them in the call itself
+var sayNameForPerson1 = sayName.bind( person1 );
+sayNameForPerson1('Greg');
+
+person2.sayName = sayNameForPerson1;
+person2.sayName('How are you!!!!!!!'); // Hi Nicholas, How are you!!!!
+
+// Because functions are objects, there is a Function constructor. You can create new functions with the Function constructor, but this isn’t gen-
+// erally recommended because it can make your code harder to understand and debugging much more difficult.
 </script>
