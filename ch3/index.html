@@ -1,0 +1,63 @@
+<!doctype html>
+<script>
+var person = {
+    name: 'Nicholas' // [[Put]] is called
+};
+
+var person2 = new Object;
+person2.name = 'John'; // [[Put]] is called
+
+person.age = 30; // [[Put]] is called
+person2.age = 45; // [[Put]] is called
+
+// When a property is first added to an object, JS uses an internal method called [[Put]] on the object.
+// This creates a spot in the object to store the property, like adding a key to a hash table
+// This not only specifies the initial value, but also some attributes of the property
+
+// The result of calling [[Put]] is the creation of an own property on the object. This just means its specific to that instance
+// of the object, unlike a prototoypal property
+
+
+// When a new value is assigned to an existing property, the [[Set]] operation takes place
+// This replaces the current value with the new one
+person.name = 'New Name';
+
+
+// Detecting properties
+// this is unreliable because of type coercion. if age is 0, this is false
+if ( person.age ) {
+}
+
+// A more reliable way is to use the in operator
+if ( 'age' in person ) {
+}
+
+// in some cases you want to check for the existence of an own property
+if ( person.hasOwnProperty( 'age' )) {
+}
+
+if ( 'toString' in person ) { } // this is true but we want to check own property
+if ( person.hasOwnProperty('toString') ) { } // this is true but we want to check own property
+
+// Removing properties
+// Simply setting a property to null doesnt remove the property completely from the object
+// This just calls [[Set]] with a value of null
+// You need to use delete
+
+// this returns true when its successful, because some properties can't be removed
+delete person.age;
+
+
+// Enumeration
+// this enumerates through all properties including prototypal
+for ( var property in person ) { }
+
+// If you just need a list of the object's properties, ES5 introduced the Object.keys method
+// which only returns own properties, not prototypal ones
+// Keep in mind that not all properties are enumerable. Most of the native methods have their [[Enumerable]] set to false
+// you can check using the propertyIsEnumerable method
+
+var properties = Object.keys( person );
+console.log(properties.propertyIsEnumerable('length'));
+
+</script>
