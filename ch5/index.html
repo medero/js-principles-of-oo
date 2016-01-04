@@ -1,0 +1,49 @@
+<!doctype html>
+<script>
+// The Object.create method can be used to explicitly define an object
+var o = {
+    name: 'John'
+};
+
+// Can be rewritten as
+Object.create( Object.prototype, {
+    name: {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: 'John'
+    }
+});
+
+// We never really need to do the above as the Object.prototype is inherited by default
+// So a more practical approach is specifying another prototype
+
+var person1 = {
+    name: 'Nick',
+    sayName: function() {
+        console.log( this.name );
+    }
+};
+
+var person2 = Object.create( person1, {
+    name: {
+        value:'Bob',
+        enumerable: true,
+        configurable: true,
+        writable: true
+    }
+});
+
+/**
+ * When a property is accessed on an object, the JavaScript engine goes
+ * through a search process. If the property is found on the instance (that is,
+ * if it’s an own property), that property value is used. If the property is not
+ * found on the instance, the search continues on [[Prototype]] . If the property
+ * is still not found, the search continues to that object’s [[Prototype]] , and
+ * so on until the end of the chain is reached. That chain usually ends with
+ * Object.prototype , whose [[Prototype]] is set to null .
+ */
+
+// You can create objects with a null prototype which wont inherit from Object.prototype
+var naked = Object.create(null);
+</script>

@@ -1,0 +1,86 @@
+<!doctype html>
+<script>
+
+// There’s no need to return a value from the function because the new operator produces the return value.
+function Person(){};
+
+var person1 = new Person;
+
+console.log( person1.constructor );
+console.log( person1.constructor == Person );
+
+// although constructor points to the right Constructor, you should use instanceof
+// because constructor can be overridden
+
+person1.constructor = 'test';
+
+// You *CAN* explicitly call return inside of a constructor. If the returned value is an object, it will be returned instead of the newly created object instance. If the
+// returned value is a primitive, the newly created object is used and the returned value is ignored.
+function Person2() { this.name = 'bob'; return {name: 'Jack' } };
+
+var person2 = new Person2;
+console.log(person2.name); // Jack, not Bob
+
+// You can even use Object.setProperty inside a constructor, as such:
+
+function Person3(name) {
+    Object.defineProperty(this, "name", {
+        get: function() {
+            return name;
+        },
+        set: function(newName) {
+            name = newName;
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+    this.sayName = function() {
+        console.log(this.name);
+    };
+};
+
+// Make sure to always call constructors with new ; otherwise, you risk changing the global object instead of the newly created object
+console.log(blah); // undefined
+function Person4() { this.blah = 'blah'; };
+var person4 = Person4();
+console.log(blah); // "blah"
+
+// Prototypes
+// if you had 100 instances of an object defined with Person3, there would be 100 separate methods of the sayName function
+// this is inefficient - and alternatively we can use prototypes
+// Almost every function has a built in prototype
+// For example the hasOwnProperty method is defined on the generic Object, but it can be accessed from any object as if it were an own property
+
+var book = {};
+console.log('hasOwnProperty' in book ); // true
+console.log( book.hasOwnProperty('hasOwnProperty') ); // false
+console.log( Object.prototype.hasOwnProperty('hasOwnProperty')); // true
+
+// An instance keeps track of its prototype through the [[Prototype]] property
+// This property is a pointer to the prototype object that the instance is using
+// When you create a new object using new, the constructors prototype property is assigned to the [[Prototype]] of that new object
+
+// Grab the prototype
+var o = {};
+var prototype = Object.getPrototypeOf( o );
+
+console.log( Object.prototype === prototype ); // true
+
+/*
+ * Some JavaScript engines also support a property called __proto__ on all objects.
+ * This property allows you to both read from and write to the [[Prototype]] property.
+ * Firefox, Safari, Chrome, and Node.js all support this property, and __proto__ is on
+ * the path for standardization in ECMAScript 6.
+ */
+
+// To define multiple prototypal methods, use an object literal
+function Person(){};
+Person.prototype  = {
+    constructor: Person, // this is necessary because the constructor gets reassigned otherwise to Object
+    sayName: function(){},
+    toString:function(){}
+};
+
+// Object.freeze doesnt work on prototypal properties
+</script>
