@@ -1,0 +1,52 @@
+<!doctype html>
+<script>
+/*
+ * Preventing Object Modification
+ * 
+ * Objects, just like properties, have internal attributes that govern their behaviour. One of these is [[Extensible]] which is a Boolean value indicating
+ * if the object itself can be modified
+ *
+ * All objects you create are extensible by default
+ * By setting [[Extensible]] to false you can prevent new properties from being added
+ *
+ *
+ * One way to do this is to call Object.preventExtensions(). This just accepts the object you want to make non extendable
+ * Once you use this method on an object, you'll never be able to add any new properties to it again.
+ * You can check the value of [[Extensible]] by using Object.isExtensible()
+ */
+
+var person = { name: 'Nicholas' };
+console.log( Object.isExtensible( person ) ); // true
+
+Object.preventExtensions( person );
+console.log( Object.isExtensible( person ) ); // false
+
+person.name = 'NewName'; // works because name is already a property
+person.name2 = 'Test';
+
+console.log( person.name ); // NewName
+console.log( person.name2 ); // undefined
+
+// with preventExtensions() though, you can still configure already-defined properties
+// so to prevent this, use Object.seal()
+
+var person = { name: 'Nicholas' };
+Object.preventExtensions( person );
+
+console.log( person.propertyIsEnumerable('name') ); // true
+
+Object.defineProperty( person, 'name', {
+    enumerable: false
+});
+
+console.log( Object.getOwnPropertyDescriptor(person, 'name').configurable ); // true
+Object.seal( person );
+console.log( Object.getOwnPropertyDescriptor(person, 'name').configurable ); // false
+console.log( delete person.name ); // false
+
+var person2 = { name: 'John' };
+Object.freeze( person2 );
+console.log( delete person2.name ); // false
+person2.name = 'Bob';
+console.log( person2.name ); // still "John"
+</script>

@@ -60,4 +60,146 @@ for ( var property in person ) { }
 var properties = Object.keys( person );
 console.log(properties.propertyIsEnumerable('length'));
 
+
+// Types of Properties
+// There are data properties and accessor properties
+// Data properties just contain values, while accessor properties contain a function to call when the property is read
+var person3 = {
+    _name: 'Nicholas',
+
+    get name() {
+        console.log('Reading name');
+        return this._name;
+    },
+
+    set name(value) {
+        console.log('Setting name');
+        this._name = value;
+    }
+};
+
+// there’s usually no reason to use accessor properties if you are only storing the
+// data in another property—just use the property itself. Accessor properties are most useful when you want the assignment of a value to trigger some
+// sort of behavior, or when reading a value requires the calculation of the desired return value.
+
+// There are two property attributes shared between data and accessor properties. One is [[Enumerable]] and the other is [[Configurable]] which
+// determines if the property can be changed. You can remove a configurable property using delete and can change its attributes at any time
+// By default, all properties you declare are both enumerable and configurable
+
+// If you want to change those property attributes, use Object.defineProperty
+// This accepts 3 arguments: the object that owns the property, the property name, and a property descriptor object containing the attributes to set it to
+
+Object.defineProperty( person3, 'age', {
+    enumerable: false
+});
+
+console.log( 'age' in person3 ) // true
+console.log( person3.propertyIsEnumerable('age3') );
+
+console.log(Object.keys(person3).length);
+
+// Change the age property to be non configurable
+Object.defineProperty( person3, 'age', {
+    configurable: false
+});
+
+delete person3.name;
+console.log('age' in person3);
+console.log( person3.age );
+
+// fails because its not configurable anymore
+Object.defineProperty( person3, 'age', {
+    configurable: true
+});
+
+// Data Property Attributes
+// Data properties possess two additional attributes that accessors do not
+// The first is [[Value]] which holds the property value. This attribute is filled in automatically when you create a property on an object
+// All values are stored in [[Value]] even if its a function
+
+// The second attribute is [[Writable]] which is a Boolean value indicating whether the property can be written to. By default, all properties are writable unless you specify otherwise
+
+var person4 = {
+    name: 'Nicholas'
+};
+
+// this is an alternative more explicit way of defining the above:
+
+var person4 = {};
+Object.defineProperty( person4, 'name', {
+    value: 'Nicholas', 
+    enumerable: true,
+    configurable: true,
+    writable: true
+});
+
+// The property attributes are set to false if no value is specified
+
+// Accessor property attributes have two additional attributes called [[Set]] and [[Get]].
+// You need to define one of these two values to create the property
+// If you dont define say, a setter, then you can only read the value
+
+var person5 = {
+    _name: 'Nick'
+};
+Object.defineProperty(person5, "name", {
+    get: function() {
+        console.log("Reading name");
+            return this._name;
+    }
+});
+
+console.log(person5.name) // "Nick"
+person5.name = 'Josh';
+console.log(person5.name) // Still "Nick"
+
+// How to specify enumerable and configurable
+Object.defineProperty(person1, "name", {
+    get: function() {
+        console.log("Reading name");
+        return this._name;
+    },
+    set: function(value) {
+        console.log("Setting name to %s", value);
+        this._name = value;
+    },
+        enumerable: true,
+        configurable: true
+});
+
+
+// Specifying multiple properties at once
+var person1 = {};
+Object.defineProperties(person1, {
+    // data property to store data
+    _name: {
+        value: "Nicholas",
+        enumerable: true,
+        configurable: true,
+        writable: true
+    },
+    name: {
+        get: function() {
+            console.log("Reading name");
+            return this._name;
+        },
+        set: function(value) {
+            console.log("Setting name to %s", value);
+            this._name = value;
+        },
+        enumerable: true,
+        configurable: true
+    }
+})
+
+// Fetching property attributes
+// If you need to fetch property attributes, you can do so in Java­Script by using Object.getOwnPropertyDescriptor()
+
+var person7 = { name: 'John' };
+
+var descriptor = Object.getOwnPropertyDescriptor( person7 );
+console.log( descriptor.enumerable );
+console.log( descriptor.writable );
+console.log( descriptor.value );
+console.log( descriptor.configurable );
 </script>
